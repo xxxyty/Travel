@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>与xxxyty同行</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Zen+Maru+Gothic:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --blue:#3a7bd5;--blue-light:#e8f0fd;--blue-mid:#b3ccf5;--blue-dark:#1a4a8a;
+  --pink:#e8619a;--pink-light:#fde8f2;--pink-mid:#f5b3d2;--pink-dark:#a3285e;
+  --bg:#faf8fc;--card:#fff;--border:#e8dff0;--text:#2a2040;--muted:#8878a0;
+  --grad:linear-gradient(135deg,#3a7bd5 0%,#7b5ea7 50%,#e8619a 100%);
+  --green:#2d8a5a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+h1,h2,.serif{font-family:'Noto Serif SC',serif}
+
+.hero{background:var(--grad);padding:3rem 1.5rem 2.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='1.5' fill='%23ffffff' fill-opacity='0.08'/%3E%3C/svg%3E");pointer-events:none}
+.hero-title{color:#fff;font-size:2.6rem;letter-spacing:.05em;position:relative;text-shadow:0 2px 20px rgba(0,0,0,.2)}
+.hero-sub{color:rgba(255,255,255,.82);font-size:1.05rem;margin-top:.5rem;font-family:'Zen Maru Gothic',sans-serif;position:relative;letter-spacing:.08em}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:5px 14px;font-size:12px;color:rgba(255,255,255,.85);margin-top:1rem;position:relative}
+
+/* CONFIG BANNER */
+.config-banner{background:#fff3cd;border-bottom:2px solid #ffc107;padding:1rem 1.5rem;display:flex;align-items:flex-start;gap:12px}
+.config-banner.hidden{display:none}
+.config-icon{font-size:24px;flex-shrink:0}
+.config-text{flex:1;font-size:13px;line-height:1.7;color:#856404}
+.config-text strong{color:#533f03}
+.config-text code{background:#fff;border:1px solid #e0c050;border-radius:4px;padding:1px 6px;font-size:12px;font-family:monospace}
+.config-toggle{background:#ffc107;color:#533f03;border:none;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;font-weight:500;margin-top:8px;display:inline-block}
+
+/* PLANS BAR */
+.plans-bar{background:#fff;border-bottom:1px solid var(--border);padding:.8rem 1rem;display:flex;gap:8px;align-items:center;overflow-x:auto;flex-wrap:nowrap}
+.plan-chip{padding:6px 14px;border-radius:99px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;white-space:nowrap;background:#fafaf8;color:var(--muted);transition:all .2s;font-family:'DM Sans',sans-serif;flex-shrink:0;display:inline-flex;align-items:center;gap:4px}
+.plan-chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.plan-chip.add-plan{border-style:dashed;border-color:var(--pink);color:var(--pink)}
+.plan-chip.add-plan:hover{background:var(--pink-light)}
+.del-plan-btn{font-size:11px;background:rgba(0,0,0,.1);border:none;color:inherit;border-radius:99px;padding:1px 6px;cursor:pointer;margin-left:2px}
+.plan-chip.active .del-plan-btn{background:rgba(255,255,255,.2);color:#fff}
+
+/* SAVE BAR */
+.save-bar{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:.5rem 1rem;font-size:12px;color:var(--muted);background:var(--blue-light);border-bottom:1px solid var(--blue-mid);flex-wrap:wrap}
+.save-dot{width:7px;height:7px;border-radius:50%;background:#ccc;transition:background .3s;flex-shrink:0}
+.save-dot.saved{background:#4caf50}
+.save-dot.saving{background:#ff9800;animation:pulse .8s infinite}
+.save-dot.error{background:#e74c3c}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.share-btn{background:var(--pink);color:#fff;border:none;border-radius:6px;padding:5px 14px;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.share-btn:hover{background:var(--pink-dark)}
+.online-dot{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--green)}
+.online-dot::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green)}
+
+/* SECTIONS */
+.main-content{padding:1rem;max-width:900px;margin:0 auto}
+.section{background:var(--card);border-radius:16px;padding:1.5rem;margin-bottom:1rem;border:1px solid var(--border);box-shadow:0 2px 12px rgba(58,123,213,.06)}
+.section-title{font-size:.95rem;color:var(--blue-dark);margin-bottom:1.2rem;font-weight:500;display:flex;align-items:center;gap:8px}
+.section-title .dot{width:8px;height:8px;border-radius:50%;background:var(--pink);flex-shrink:0}
+
+label{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+input[type=text],input[type=url],select,textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:14px;font-family:'DM Sans',sans-serif;background:#fafaf8;color:var(--text);transition:border-color .2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue)}
+textarea{resize:vertical;min-height:70px;line-height:1.6}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+.fg{display:flex;flex-direction:column;gap:5px}
+
+.btn-blue{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.btn-blue:hover{background:var(--blue-dark)}
+.btn-pink{background:var(--pink);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.btn-pink:hover{background:var(--pink-dark)}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:8px;padding:7px 14px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+.btn-danger{background:transparent;color:#c0392b;border:none;font-size:16px;cursor:pointer;padding:2px 6px;border-radius:4px;line-height:1}
+.btn-danger:hover{background:#fff0f0}
+
+/* CHECKLIST */
+.checklist-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;border:1px solid var(--border);margin-bottom:6px;background:#fafaf8;transition:background .2s}
+.checklist-item.checked{background:#f0faf4;border-color:#b7dfc8}
+.checklist-item input[type=checkbox]{width:18px;height:18px;accent-color:var(--pink);flex-shrink:0;cursor:pointer}
+.checklist-item .ci-text{flex:1;font-size:14px;border:none;background:transparent;color:var(--text);font-family:'DM Sans',sans-serif;padding:0}
+.checklist-item .ci-text:focus{outline:none}
+.checklist-item.checked .ci-text{text-decoration:line-through;color:var(--muted)}
+
+/* FLIGHT / HOTEL */
+.flight-card{background:linear-gradient(135deg,var(--blue-light),var(--pink-light));border:1px solid var(--blue-mid);border-radius:12px;padding:1.2rem;margin-bottom:10px}
+.hotel-card{background:linear-gradient(135deg,#fdf0f8,#f0f5ff);border:1px solid var(--pink-mid);border-radius:12px;padding:1.2rem;margin-bottom:10px}
+.card-header{font-size:13px;font-weight:500;color:var(--blue-dark);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+
+/* DAY TABS */
+.days-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;align-items:center}
+.day-tab{padding:6px 16px;border-radius:99px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;background:#fafaf8;color:var(--muted);transition:all .2s}
+.day-tab.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+.day-tab:hover:not(.active){border-color:var(--blue);color:var(--blue)}
+.day-tab-add{border-style:dashed;border-color:var(--pink);color:var(--pink);background:transparent}
+.day-tab-add:hover{background:var(--pink-light)}
+
+/* SPOTS */
+.spot-card{background:#fff;border:1.5px solid var(--blue-mid);border-radius:12px;padding:1.2rem;margin-bottom:6px}
+.spot-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.spot-num{width:26px;height:26px;background:var(--grad);color:#fff;border-radius:50%;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:500}
+.spot-name-display{font-weight:500;font-size:15px;flex:1;color:var(--blue-dark)}
+
+/* TRANSPORT */
+.transport-row{display:flex;align-items:center;gap:10px;padding:8px 14px;background:linear-gradient(90deg,var(--blue-light),var(--pink-light));border-radius:99px;margin:6px 0;border:1px dashed var(--blue-mid)}
+.transport-arrow{color:var(--blue);font-size:16px}
+.transport-sel{border:1.5px solid var(--blue-mid);border-radius:8px;padding:5px 8px;font-size:13px;background:#fff;color:var(--text);font-family:'DM Sans',sans-serif;flex:1}
+.transport-time-inp{width:100px;border:1.5px solid var(--pink-mid);border-radius:8px;padding:5px 8px;font-size:13px;font-family:'DM Sans',sans-serif;background:#fff;color:var(--text)}
+
+/* MAP LINKS */
+.map-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.map-link{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:99px;font-size:12px;text-decoration:none;font-family:'DM Sans',sans-serif;white-space:nowrap;cursor:pointer}
+.ml-blue{background:var(--blue);color:#fff}
+.ml-green{background:var(--green);color:#fff}
+.ml-pink{background:var(--pink);color:#fff}
+.ml-gray{background:#777;color:#fff}
+.map-link:hover{opacity:.82}
+
+/* MEAL */
+.meal-row{background:#fff;border:1.5px solid var(--pink-mid);border-radius:10px;padding:12px;margin-bottom:8px}
+.meal-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.meal-icon{font-size:18px}
+.meal-label-big{font-size:13px;font-weight:500;color:var(--pink-dark)}
+
+/* IMAGE */
+.img-upload-area{border:2px dashed var(--blue-mid);border-radius:10px;padding:14px;text-align:center;cursor:pointer;color:var(--muted);font-size:13px;transition:border-color .2s;margin-top:8px}
+.img-upload-area:hover{border-color:var(--blue)}
+.img-preview-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.img-thumb{position:relative;width:80px;height:80px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.img-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.img-thumb .del-img{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+
+/* TAB NAV */
+.tab-nav{display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:1.5rem}
+.tn-btn{padding:8px 18px;font-size:13px;border:none;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s}
+.tn-btn.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:500}
+
+/* PREVIEW */
+.preview-trip-header{background:var(--grad);border-radius:12px;padding:1.5rem;color:#fff;margin-bottom:1rem}
+.preview-day-card{background:#fff;border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:1rem}
+.preview-day-hd{background:var(--grad);color:#fff;padding:12px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.preview-day-body{padding:16px}
+.p-spot{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #f0e8f5}
+.p-spot:last-child{border-bottom:none}
+.p-snum{width:22px;height:22px;background:var(--pink);color:#fff;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.p-transport{display:flex;align-items:center;gap:8px;padding:6px 14px;background:linear-gradient(90deg,var(--blue-light),var(--pink-light));border-radius:99px;margin:4px 0;font-size:12px;color:var(--blue-dark)}
+.p-meals{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.p-meal{flex:1;min-width:100px;background:var(--pink-light);border:1px solid var(--pink-mid);border-radius:8px;padding:8px}
+.p-meal-lbl{font-size:11px;color:var(--pink-dark);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+.p-note{background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:8px;padding:10px 12px;margin-top:10px;font-size:13px;color:var(--blue-dark);line-height:1.6}
+.checklist-preview{background:var(--pink-light);border:1px solid var(--pink-mid);border-radius:10px;padding:12px;margin-bottom:12px}
+
+/* LOADING OVERLAY */
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:12px}
+.loading-overlay.hidden{display:none}
+.spinner{width:40px;height:40px;border:3px solid var(--blue-mid);border-top-color:var(--blue);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#2a2040;color:#fff;padding:10px 20px;border-radius:99px;font-size:13px;z-index:9999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(max-width:600px){.row2,.row3,.row4{grid-template-columns:1fr}.hero-title{font-size:1.8rem}}
+@media print{
+  .plans-bar,.save-bar,.config-banner,.days-tabs,.btn-blue,.btn-pink,.btn-ghost,.btn-danger,.img-upload-area,.map-actions,.tab-nav,.transport-row select,.transport-row input{display:none!important}
+  .section{box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div style="color:var(--blue);font-size:14px" id="loadingText">连接中...</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-title">与xxxyty同行</div>
+  <div class="hero-sub">めめ、あぐ　ちゃんす　のんわ?</div>
+  <div class="hero-badge">☁ 云端同步 · 实时共编 · 一键导航</div>
+</div>
+
+<!-- FIREBASE CONFIG BANNER -->
+<div class="config-banner" id="configBanner">
+  <div class="config-icon">⚙️</div>
+  <div style="flex:1">
+    <div class="config-text">
+      <strong>第一步：填入你的 Firebase 配置</strong><br>
+      请将下方 JS 中 <code>FIREBASE_CONFIG</code> 替换为你的项目配置，然后重新保存文件。<br>
+      <span style="color:#6d5200">👉 还没有 Firebase 项目？请查看同目录下的 <strong>部署教程.txt</strong> 文件，5分钟即可完成配置。</span>
+    </div>
+    <button class="config-toggle" onclick="document.getElementById('configBanner').classList.add('hidden')">我已配置，关闭提示</button>
+  </div>
+</div>
+
+<!-- PLANS BAR -->
+<div class="plans-bar" id="plansBar">
+  <span style="font-size:13px;color:var(--muted)">加载攻略中...</span>
+</div>
+
+<!-- SAVE BAR -->
+<div class="save-bar">
+  <div class="save-dot" id="saveDot"></div>
+  <span id="saveStatus">未连接</span>
+  <span class="online-dot" id="onlineIndicator" style="display:none">实时同步已开启</span>
+  <button class="share-btn" onclick="shareCurrentPlan()">🔗 生成共享链接</button>
+</div>
+
+<div class="main-content" id="mainContent"></div>
+
+<!-- ============ FIREBASE SDK ============ -->
+<script type="module">
+// =====================================================
+//  ⚠️  在此处填入你的 Firebase 配置  ⚠️
+//  替换下面 firebaseConfig 中的所有字段
+// =====================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyCTxJedmgs9b95q0RaXtfxoA10XaxTUVDs",
+  authDomain: "traveldata-8356f.firebaseapp.com",
+  projectId: "traveldata-8356f",
+  storageBucket: "traveldata-8356f.firebasestorage.app",
+  messagingSenderId: "21818383572",
+  appId: "1:21818383572:web:b1109337c25cf3a482af41",
+  measurementId: "G-951SQNS3S2"
+};
+// =====================================================
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ---- detect unconfigured ----
+const isConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
+
+let app, db;
+if(isConfigured){
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+}
+
+// ============ STATE ============
+let plans = {};           // { planId: planData }
+let currentPlanId = null;
+let activeTab = 'edit';
+let unsubscribe = null;   // realtime listener
+let saveDebounceTimer = null;
+let autoSaveTimer = null;
+
+const TRANSPORT_OPTS = ['🚶 步行','🚇 地铁','🚌 公交','🚕 打车/打的','🚗 自驾','🚲 骑行','🚡 缆车','⛵ 轮渡','🚂 火车','✈ 飞机','🛵 摩托/电动'];
+
+// ============ TOAST ============
+function toast(msg, duration=2500){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), duration);
+}
+
+// ============ LOADING ============
+function showLoading(msg='加载中...'){
+  document.getElementById('loadingText').textContent = msg;
+  document.getElementById('loadingOverlay').classList.remove('hidden');
+}
+function hideLoading(){
+  document.getElementById('loadingOverlay').classList.add('hidden');
+}
+
+// ============ SAVE STATUS ============
+function setSaveStatus(state, msg){
+  const dot = document.getElementById('saveDot');
+  const st = document.getElementById('saveStatus');
+  dot.className = 'save-dot ' + state;
+  st.textContent = msg;
+}
+
+// ============ FIREBASE OPERATIONS ============
+async function loadAllPlans(){
+  if(!isConfigured){ loadLocalFallback(); return; }
+  showLoading('加载攻略...');
+  try{
+    const snap = await getDocs(collection(db,'plans'));
+    plans = {};
+    snap.forEach(d=>{ plans[d.id] = {...d.data(), id:d.id}; });
+
+    // check URL for shared plan
+    const params = new URLSearchParams(location.search);
+    const sharedId = params.get('id');
+    if(sharedId){
+      if(!plans[sharedId]){
+        const sd = await getDoc(doc(db,'plans',sharedId));
+        if(sd.exists()) plans[sharedId] = {...sd.data(), id:sharedId};
+      }
+      currentPlanId = sharedId;
+    } else if(Object.keys(plans).length > 0){
+      currentPlanId = currentPlanId && plans[currentPlanId] ? currentPlanId : Object.keys(plans)[0];
+    } else {
+      await createNewPlan('我的第一个攻略');
+    }
+    hideLoading();
+    renderAll();
+    subscribeToCurrentPlan();
+    startAutoSave();
+    document.getElementById('onlineIndicator').style.display='inline-flex';
+    setSaveStatus('saved','已同步');
+  }catch(e){
+    hideLoading();
+    setSaveStatus('error','连接失败');
+    toast('Firebase 连接失败，请检查配置: '+e.message, 5000);
+    loadLocalFallback();
+  }
+}
+
+async function savePlanToFirebase(planId, data){
+  if(!isConfigured){ saveLocal(); return; }
+  setSaveStatus('saving','保存中...');
+  try{
+    const toSave = {...data};
+    delete toSave.id;
+    toSave.updatedAt = serverTimestamp();
+    await setDoc(doc(db,'plans',planId), toSave);
+    setSaveStatus('saved','已保存 '+new Date().toLocaleTimeString('zh',{hour:'2-digit',minute:'2-digit'}));
+  }catch(e){
+    setSaveStatus('error','保存失败');
+    toast('保存失败: '+e.message, 4000);
+  }
+}
+
+async function deletePlanFromFirebase(planId){
+  if(!isConfigured){ delete plans[planId]; saveLocal(); return; }
+  try{
+    await deleteDoc(doc(db,'plans',planId));
+  }catch(e){ toast('删除失败: '+e.message); }
+}
+
+function subscribeToCurrentPlan(){
+  if(!isConfigured || !currentPlanId) return;
+  if(unsubscribe) unsubscribe();
+  unsubscribe = onSnapshot(doc(db,'plans',currentPlanId), snap=>{
+    if(snap.exists()){
+      const remote = {...snap.data(), id:currentPlanId};
+      // only update if not currently editing (debounce active = user is typing)
+      if(!saveDebounceTimer){
+        plans[currentPlanId] = remote;
+        renderAll();
+      }
+    }
+  });
+}
+
+// ============ LOCAL FALLBACK (no Firebase) ============
+function loadLocalFallback(){
+  try{
+    const raw = localStorage.getItem('xxxyty_local');
+    if(raw) plans = JSON.parse(raw);
+  }catch(e){ plans={}; }
+  if(Object.keys(plans).length===0){ createNewPlanLocal('我的攻略'); return; }
+  if(!currentPlanId) currentPlanId = Object.keys(plans)[0];
+  renderAll();
+}
+function saveLocal(){
+  localStorage.setItem('xxxyty_local', JSON.stringify(plans));
+  setSaveStatus('saved','已本地保存');
+}
+function createNewPlanLocal(name){
+  const id = 'local_'+Date.now();
+  plans[id] = createPlanData(id, name);
+  currentPlanId = id;
+  saveLocal();
+  renderAll();
+}
+
+// ============ PLAN DATA STRUCTURE ============
+function createPlanData(id, name){
+  return {
+    id, name: name||'新攻略',
+    title:'', date:'', people:'2人同行',
+    flights:[], hotels:[],
+    checklist:[
+      {id:'c1',text:'护照 / 证件',checked:false},
+      {id:'c2',text:'机票打印 / 电子票',checked:false},
+      {id:'c3',text:'酒店确认单',checked:false},
+      {id:'c4',text:'当地货币 / 信用卡',checked:false},
+      {id:'c5',text:'充电宝 / 转换插头',checked:false},
+      {id:'c6',text:'旅行保险',checked:false},
+    ],
+    days:[createDayData(1)],
+    currentDay:0,
+  };
+}
+
+function createDayData(num){
+  return {
+    theme:'', weatherIcon:'☀', weatherDesc:'', weatherTemp:'',
+    hotelRef:'',
+    spots:[createSpotData()],
+    breakfast:{name:'',addr:''},
+    lunch:{name:'',addr:''},
+    dinner:{name:'',addr:''},
+    note:''
+  };
+}
+
+function createSpotData(){
+  return {name:'',address:'',time:'',website:'',content:'',note:'',images:[],transport:'',transportTime:''};
+}
+
+// ============ CREATE / SWITCH / DELETE PLANS ============
+async function createNewPlan(name){
+  if(!name) name = '新攻略';
+  const id = 'plan_'+Date.now();
+  const data = createPlanData(id, name);
+  plans[id] = data;
+  currentPlanId = id;
+  await savePlanToFirebase(id, data);
+  renderAll();
+  subscribeToCurrentPlan();
+}
+
+window.promptNewPlan = function(){
+  const name = prompt('攻略名称（如：东京5日）','');
+  if(name !== null) createNewPlan(name||'新攻略');
+};
+
+window.switchPlan = function(id){
+  collectCurrentPlan();
+  triggerSave();
+  currentPlanId = id;
+  activeTab = 'edit';
+  renderAll();
+  subscribeToCurrentPlan();
+};
+
+window.deletePlan = function(id, e){
+  e.stopPropagation();
+  if(!confirm('确定删除这个攻略？')) return;
+  deletePlanFromFirebase(id);
+  delete plans[id];
+  if(currentPlanId===id){
+    const ids = Object.keys(plans);
+    if(ids.length){ currentPlanId=ids[0]; renderAll(); subscribeToCurrentPlan(); }
+    else createNewPlan('我的攻略');
+  } else renderPlansBar();
+};
+
+// ============ COLLECT FORM DATA ============
+function g(id){ const el=document.getElementById(id); return el?el.value:''; }
+
+function collectCurrentPlan(){
+  const p = plans[currentPlanId];
+  if(!p) return;
+  p.name = g('planName')||p.name;
+  p.title = g('tripTitle');
+  p.date = g('tripDate');
+  p.people = g('tripPeople');
+
+  p.checklist.forEach(item=>{
+    const cb=document.getElementById('cb_'+item.id);
+    const tx=document.getElementById('ct_'+item.id);
+    if(cb) item.checked=cb.checked;
+    if(tx) item.text=tx.value;
+  });
+
+  (p.flights||[]).forEach((f,i)=>{
+    f.person=g('fp_'+i); f.airline=g('fa_'+i); f.number=g('fn_'+i);
+    f.dep=g('fd_'+i); f.arr=g('far_'+i); f.depTime=g('fdt_'+i); f.arrTime=g('fat_'+i);
+  });
+
+  (p.hotels||[]).forEach((h,i)=>{
+    h.name=g('hn_'+i); h.address=g('ha_'+i);
+    h.checkin=g('hci_'+i); h.checkout=g('hco_'+i);
+  });
+
+  const d = p.days[p.currentDay];
+  if(!d) return;
+  d.theme=g('dTheme'); d.weatherIcon=g('dWIcon'); d.weatherDesc=g('dWDesc'); d.weatherTemp=g('dWTemp');
+  d.hotelRef=g('dHotel');
+  d.breakfast={name:g('bfName'),addr:g('bfAddr')};
+  d.lunch={name:g('luName'),addr:g('luAddr')};
+  d.dinner={name:g('diName'),addr:g('diAddr')};
+  d.note=g('dNote');
+
+  d.spots.forEach((s,i)=>{
+    s.name=g('sn_'+i); s.address=g('sa_'+i); s.time=g('st_'+i);
+    s.website=g('sw_'+i); s.content=g('sc_'+i); s.note=g('sno_'+i);
+    if(i>0){ s.transport=g('tr_'+i); s.transportTime=g('trt_'+i); }
+  });
+}
+
+function debounceSave(){
+  setSaveStatus('saving','等待保存...');
+  clearTimeout(saveDebounceTimer);
+  saveDebounceTimer = setTimeout(()=>{
+    saveDebounceTimer = null;
+    collectCurrentPlan();
+    if(isConfigured) savePlanToFirebase(currentPlanId, plans[currentPlanId]);
+    else saveLocal();
+  }, 1800);
+}
+
+function triggerSave(){
+  clearTimeout(saveDebounceTimer);
+  saveDebounceTimer = null;
+  collectCurrentPlan();
+  if(isConfigured) savePlanToFirebase(currentPlanId, plans[currentPlanId]);
+  else saveLocal();
+}
+
+function startAutoSave(){
+  clearInterval(autoSaveTimer);
+  autoSaveTimer = setInterval(()=>{
+    if(!saveDebounceTimer) triggerSave();
+  }, 60000);
+}
+
+// ============ SHARE ============
+window.shareCurrentPlan = function(){
+  collectCurrentPlan();
+  if(!isConfigured){
+    toast('请先配置 Firebase 才能使用共享链接功能', 3000); return;
+  }
+  triggerSave();
+  const url = location.origin + location.pathname + '?id=' + currentPlanId;
+  navigator.clipboard.writeText(url).then(()=>{
+    toast('🔗 共享链接已复制！发给朋友即可共同编辑');
+  }).catch(()=>{
+    prompt('复制此链接分享给朋友：', url);
+  });
+};
+
+// ============ RENDER ============
+function renderAll(){
+  renderPlansBar();
+  renderMainContent();
+}
+
+function renderPlansBar(){
+  const bar = document.getElementById('plansBar');
+  const chips = Object.values(plans).map(p=>`
+    <div class="plan-chip ${p.id===currentPlanId?'active':''}" onclick="switchPlan('${p.id}')">
+      ${esc(p.name||'攻略')}
+      <button class="del-plan-btn" onclick="deletePlan('${p.id}',event)">×</button>
+    </div>
+  `).join('');
+  bar.innerHTML = chips + `<div class="plan-chip add-plan" onclick="promptNewPlan()">＋ 新攻略</div>`;
+}
+
+function renderMainContent(){
+  const mc = document.getElementById('mainContent');
+  const p = plans[currentPlanId];
+  if(!p){ mc.innerHTML='<div style="padding:2rem;text-align:center;color:var(--muted)">暂无攻略，请新建一个</div>'; return; }
+
+  mc.innerHTML = `
+    <div class="tab-nav">
+      <button class="tn-btn ${activeTab==='edit'?'active':''}" onclick="switchTab('edit')">✏️ 编辑行程</button>
+      <button class="tn-btn ${activeTab==='preview'?'active':''}" onclick="switchTab('preview')">👁 预览攻略</button>
+    </div>
+    <div id="editView" style="display:${activeTab==='edit'?'block':'none'}">
+      ${renderBasicInfo(p)}
+      ${renderChecklist(p)}
+      ${renderFlights(p)}
+      ${renderHotels(p)}
+      ${renderDayEditor(p)}
+    </div>
+    <div id="previewView" style="display:${activeTab==='preview'?'block':'none'}">
+      ${activeTab==='preview'?renderPreview(p):''}
+    </div>
+    <div style="padding-bottom:3rem"></div>
+  `;
+  bindImgGrids(p);
+}
+
+window.switchTab = function(tab){
+  collectCurrentPlan();
+  activeTab = tab;
+  renderMainContent();
+};
+
+// ============ BASIC INFO ============
+function renderBasicInfo(p){
+  return `<div class="section">
+    <div class="section-title"><span class="dot"></span>行程基本信息</div>
+    <div class="row2" style="margin-bottom:12px">
+      <div class="fg"><label>攻略名称</label><input id="planName" value="${esc(p.name)}" placeholder="例如：东京5日游" oninput="debounceSave()"/></div>
+      <div class="fg"><label>出行日期</label><input id="tripDate" type="text" value="${esc(p.date)}" placeholder="例如：2025年4月5日" oninput="debounceSave()"/></div>
+    </div>
+    <div class="row2">
+      <div class="fg"><label>行程标题 / 目的地</label><input id="tripTitle" value="${esc(p.title)}" placeholder="例如：东京自由行" oninput="debounceSave()"/></div>
+      <div class="fg"><label>旅行人数</label>
+        <select id="tripPeople" onchange="debounceSave()">
+          ${['1人独旅','2人同行','3-4人小团','5人以上家庭'].map(v=>`<option ${p.people===v?'selected':''}>${v}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ============ CHECKLIST ============
+function renderChecklist(p){
+  const items = (p.checklist||[]).map(item=>`
+    <div class="checklist-item ${item.checked?'checked':''}" id="cli_${item.id}">
+      <input type="checkbox" id="cb_${item.id}" ${item.checked?'checked':''} onchange="toggleCheck('${p.id}','${item.id}')"/>
+      <input class="ci-text" id="ct_${item.id}" value="${esc(item.text)}" placeholder="输入待准备事项..." oninput="debounceSave()"/>
+      <button class="btn-danger" onclick="removeCheckItem('${p.id}','${item.id}')">×</button>
+    </div>
+  `).join('');
+  return `<div class="section">
+    <div class="section-title"><span class="dot"></span>行前准备 Checklist</div>
+    <div id="checklistArea">${items}</div>
+    <button class="btn-ghost" style="margin-top:8px;font-size:12px" onclick="addCheckItem('${p.id}')">＋ 添加事项</button>
+  </div>`;
+}
+
+window.toggleCheck = function(pid, cid){
+  const p = plans[pid]; if(!p) return;
+  const item = p.checklist.find(c=>c.id===cid); if(!item) return;
+  item.checked = !item.checked;
+  const cli = document.getElementById('cli_'+cid);
+  if(cli) cli.className='checklist-item'+(item.checked?' checked':'');
+  debounceSave();
+};
+
+window.addCheckItem = function(pid){
+  collectCurrentPlan();
+  const p = plans[pid]; if(!p) return;
+  const id='c'+Date.now();
+  p.checklist.push({id,text:'',checked:false});
+  renderMainContent();
+  setTimeout(()=>{ const el=document.getElementById('ct_'+id); if(el){el.focus();} },50);
+};
+
+window.removeCheckItem = function(pid, cid){
+  collectCurrentPlan();
+  const p = plans[pid]; if(!p) return;
+  p.checklist = p.checklist.filter(c=>c.id!==cid);
+  debounceSave(); renderMainContent();
+};
+
+// ============ FLIGHTS ============
+function renderFlights(p){
+  const cards = (p.flights||[]).map((f,i)=>`
+    <div class="flight-card">
+      <div class="card-header"><span>✈ 航班 ${i+1}</span>
+        <button class="btn-danger" onclick="removeFlight('${p.id}',${i})">× 删除</button></div>
+      <div class="row4" style="margin-bottom:8px">
+        <div class="fg"><label>乘客姓名</label><input id="fp_${i}" value="${esc(f.person)}" placeholder="姓名" oninput="debounceSave()"/></div>
+        <div class="fg"><label>航空公司</label><input id="fa_${i}" value="${esc(f.airline)}" placeholder="日本航空" oninput="debounceSave()"/></div>
+        <div class="fg"><label>航班号</label><input id="fn_${i}" value="${esc(f.number)}" placeholder="JL803" oninput="debounceSave()"/></div>
+        <div class="fg"><label>&nbsp;</label></div>
+      </div>
+      <div class="row4">
+        <div class="fg"><label>出发地</label><input id="fd_${i}" value="${esc(f.dep)}" placeholder="上海 PVG" oninput="debounceSave()"/></div>
+        <div class="fg"><label>出发时间</label><input id="fdt_${i}" type="text" value="${esc(f.depTime)}" placeholder="09:30" oninput="debounceSave()"/></div>
+        <div class="fg"><label>目的地</label><input id="far_${i}" value="${esc(f.arr)}" placeholder="东京 NRT" oninput="debounceSave()"/></div>
+        <div class="fg"><label>到达时间</label><input id="fat_${i}" type="text" value="${esc(f.arrTime)}" placeholder="14:45" oninput="debounceSave()"/></div>
+      </div>
+    </div>`).join('');
+  return `<div class="section">
+    <div class="section-title"><span class="dot"></span>航班信息</div>
+    ${cards}
+    <button class="btn-blue" style="font-size:12px;padding:7px 14px" onclick="addFlight('${p.id}')">＋ 添加航班</button>
+  </div>`;
+}
+window.addFlight = function(pid){
+  collectCurrentPlan(); plans[pid].flights.push({person:'',airline:'',number:'',dep:'',arr:'',depTime:'',arrTime:''});
+  debounceSave(); renderMainContent();
+};
+window.removeFlight = function(pid,i){
+  collectCurrentPlan(); plans[pid].flights.splice(i,1); debounceSave(); renderMainContent();
+};
+
+// ============ HOTELS ============
+function renderHotels(p){
+  const cards = (p.hotels||[]).map((h,i)=>{
+    const q = encodeURIComponent((h.name||'')+(h.address?' '+h.address:''));
+    return `<div class="hotel-card">
+      <div class="card-header"><span>🏨 酒店 ${i+1}</span>
+        <button class="btn-danger" onclick="removeHotel('${p.id}',${i})">× 删除</button></div>
+      <div class="row2" style="margin-bottom:8px">
+        <div class="fg"><label>酒店名称</label><input id="hn_${i}" value="${esc(h.name)}" placeholder="浅草View Hotel" oninput="debounceSave()"/></div>
+        <div class="fg"><label>酒店地址</label><input id="ha_${i}" value="${esc(h.address)}" placeholder="详细地址" oninput="debounceSave()"/></div>
+      </div>
+      <div class="row2" style="margin-bottom:8px">
+        <div class="fg"><label>入住时间</label><input id="hci_${i}" type="text" value="${esc(h.checkin)}" placeholder="4月5日 15:00" oninput="debounceSave()"/></div>
+        <div class="fg"><label>退房时间</label><input id="hco_${i}" type="text" value="${esc(h.checkout)}" placeholder="4月8日 11:00" oninput="debounceSave()"/></div>
+      </div>
+      ${h.name?`<div class="map-actions">
+        <a class="map-link ml-blue" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank">📍 查看位置</a>
+        <a class="map-link ml-green" href="https://www.google.com/maps/dir/?api=1&destination=${q}&travelmode=transit" target="_blank">🧭 导航前往</a>
+      </div>`:''}
+    </div>`;
+  }).join('');
+  return `<div class="section">
+    <div class="section-title"><span class="dot"></span>酒店住宿</div>
+    ${cards}
+    <button class="btn-pink" style="font-size:12px;padding:7px 14px" onclick="addHotel('${p.id}')">＋ 添加酒店</button>
+  </div>`;
+}
+window.addHotel = function(pid){
+  collectCurrentPlan(); plans[pid].hotels.push({name:'',address:'',checkin:'',checkout:''});
+  debounceSave(); renderMainContent();
+};
+window.removeHotel = function(pid,i){
+  collectCurrentPlan(); plans[pid].hotels.splice(i,1); debounceSave(); renderMainContent();
+};
+
+// ============ DAY EDITOR ============
+function renderDayEditor(p){
+  const d = p.days[p.currentDay];
+  if(!d) return '';
+  const tabsHtml = p.days.map((day,i)=>`
+    <button class="day-tab ${i===p.currentDay?'active':''}" onclick="switchDay('${p.id}',${i})">
+      Day ${i+1}${day.theme?' · '+day.theme.slice(0,5):''}
+    </button>`).join('') +
+    `<button class="day-tab day-tab-add" onclick="addDay('${p.id}')">＋ 天</button>`;
+
+  let spotsHtml = '';
+  d.spots.forEach((s,i)=>{
+    if(i>0){
+      spotsHtml += `<div class="transport-row">
+        <span class="transport-arrow">↓</span>
+        <select class="transport-sel" id="tr_${i}" onchange="debounceSave()">
+          <option value="">— 选择交通方式 —</option>
+          ${TRANSPORT_OPTS.map(o=>`<option ${s.transport===o?'selected':''}>${o}</option>`).join('')}
+        </select>
+        <input class="transport-time-inp" id="trt_${i}" value="${esc(s.transportTime)}" placeholder="约15分钟" oninput="debounceSave()"/>
+      </div>`;
+    }
+    const city = p.title||'';
+    const q = encodeURIComponent(s.name+(s.address?' '+s.address:'')+(city?' '+city:''));
+    const nextS = d.spots[i+1];
+    const nextQ = nextS ? encodeURIComponent(nextS.name+(nextS.address?' '+nextS.address:'')+(city?' '+city:'')) : '';
+    spotsHtml += `<div class="spot-card" id="spot_${i}">
+      <div class="spot-header">
+        <div class="spot-num">${i+1}</div>
+        <div class="spot-name-display" id="sndisplay_${i}">${esc(s.name)||'景点 '+(i+1)}</div>
+        ${d.spots.length>1?`<button class="btn-danger" onclick="removeSpot('${p.id}',${i})">×</button>`:''}
+      </div>
+      <div class="row2" style="margin-bottom:8px">
+        <div class="fg"><label>景点名称</label><input id="sn_${i}" value="${esc(s.name)}" placeholder="例如：浅草寺" oninput="onSpotNameChange(${i})"/></div>
+        <div class="fg"><label>地址 / 区域</label><input id="sa_${i}" value="${esc(s.address)}" placeholder="详细地址" oninput="debounceSave()"/></div>
+      </div>
+      <div class="row3" style="margin-bottom:8px">
+        <div class="fg"><label>游玩时间段</label><input id="st_${i}" value="${esc(s.time)}" placeholder="09:00 - 11:30" oninput="debounceSave()"/></div>
+        <div class="fg"><label>官方网站</label><input id="sw_${i}" type="url" value="${esc(s.website)}" placeholder="https://..." oninput="debounceSave()"/></div>
+        <div class="fg"><label>景点备注</label><input id="sno_${i}" value="${esc(s.note)}" placeholder="门票/预约提示" oninput="debounceSave()"/></div>
+      </div>
+      <div class="fg" style="margin-bottom:10px">
+        <label>游玩详细内容</label>
+        <textarea id="sc_${i}" placeholder="记录玩法、路线、体验心得..." oninput="debounceSave()">${esc(s.content)}</textarea>
+      </div>
+      <div class="map-actions" style="margin-bottom:10px">
+        ${s.name
+          ? `<a class="map-link ml-blue" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank">📍 查看位置</a>
+             <a class="map-link ml-green" href="https://www.google.com/maps/dir/?api=1&destination=${q}&travelmode=transit" target="_blank">🚶 导航到这里</a>
+             ${nextS&&nextQ?`<a class="map-link ml-gray" href="https://www.google.com/maps/dir/?api=1&origin=${q}&destination=${nextQ}&travelmode=transit" target="_blank">🧭 导航到下一站</a>`:''}
+             ${s.website?`<a class="map-link ml-pink" href="${esc(s.website)}" target="_blank">🌐 官网</a>`:''}`
+          : `<span style="font-size:12px;color:var(--muted)">填写景点名称后显示导航链接</span>`}
+      </div>
+      <div class="fg">
+        <label>图片</label>
+        <div class="img-preview-grid" id="imgGrid_${i}"></div>
+        <div class="img-upload-area" onclick="document.getElementById('imgInput_${i}').click()">📷 点击添加图片</div>
+        <input type="file" id="imgInput_${i}" accept="image/*" multiple style="display:none" onchange="handleImgUpload('${p.id}',${i},event)"/>
+      </div>
+    </div>`;
+  });
+
+  const mealHtml = (prefix, icon, label, meal)=>{
+    const q = encodeURIComponent((meal.name||'')+(meal.addr?' '+meal.addr:'')+(p.title?' '+p.title:''));
+    return `<div class="meal-row">
+      <div class="meal-header"><span class="meal-icon">${icon}</span><span class="meal-label-big">${label}</span></div>
+      <div class="row2" style="margin-bottom:8px">
+        <div class="fg"><label>餐厅名称</label><input id="${prefix}Name" value="${esc(meal.name)}" placeholder="例如：一兰拉面" oninput="debounceSave()"/></div>
+        <div class="fg"><label>地址（可选）</label><input id="${prefix}Addr" value="${esc(meal.addr)}" placeholder="例如：新宿店" oninput="debounceSave()"/></div>
+      </div>
+      ${meal.name?`<div class="map-actions">
+        <a class="map-link ml-blue" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank">📍 地图查看</a>
+        <a class="map-link ml-green" href="https://www.google.com/maps/dir/?api=1&destination=${q}&travelmode=transit" target="_blank">🧭 导航</a>
+      </div>`:''}
+    </div>`;
+  };
+
+  return `<div class="section">
+    <div class="section-title"><span class="dot"></span>每日行程规划</div>
+    <div class="days-tabs">${tabsHtml}</div>
+    <div class="row2" style="margin-bottom:12px">
+      <div class="fg"><label>今日主题</label><input id="dTheme" value="${esc(d.theme)}" placeholder="例如：浅草·上野" oninput="debounceSave()"/></div>
+      <div class="row3" style="gap:8px">
+        <div class="fg"><label>天气图标</label>
+          <select id="dWIcon" onchange="debounceSave()">
+            ${['☀','🌤','⛅','🌥','☁','🌦','🌧','⛈','🌩','🌨','❄','🌪','🌫','🥵','🥶'].map(e=>`<option ${d.weatherIcon===e?'selected':''}>${e}</option>`).join('')}
+          </select>
+        </div>
+        <div class="fg"><label>天气描述</label><input id="dWDesc" value="${esc(d.weatherDesc)}" placeholder="晴转多云" oninput="debounceSave()"/></div>
+        <div class="fg"><label>气温</label><input id="dWTemp" value="${esc(d.weatherTemp)}" placeholder="15-22°C" oninput="debounceSave()"/></div>
+      </div>
+    </div>
+    <div class="fg" style="margin-bottom:1.5rem">
+      <label>今日入住酒店</label>
+      <select id="dHotel" onchange="debounceSave()">
+        <option value="">— 选择酒店 —</option>
+        ${(p.hotels||[]).map((h,i)=>`<option value="${i}" ${String(d.hotelRef)===String(i)?'selected':''}>${esc(h.name)||'酒店'+(i+1)}</option>`).join('')}
+      </select>
+    </div>
+    <div style="font-size:13px;color:var(--blue-dark);font-weight:500;margin-bottom:10px">📍 今日景点</div>
+    ${spotsHtml}
+    <button class="btn-blue" style="margin:8px 0;font-size:12px;padding:7px 14px" onclick="addSpot('${p.id}')">＋ 添加景点</button>
+    <div style="font-size:13px;color:var(--pink-dark);font-weight:500;margin:1.5rem 0 10px">🍴 餐饮安排</div>
+    ${mealHtml('bf','🌅','早餐',d.breakfast||{name:'',addr:''})}
+    ${mealHtml('lu','☀️','午餐',d.lunch||{name:'',addr:''})}
+    ${mealHtml('di','🌙','晚餐',d.dinner||{name:'',addr:''})}
+    <div class="fg" style="margin-top:1rem">
+      <label>今日备注 / 小贴士</label>
+      <textarea id="dNote" placeholder="交通、注意事项、预约提醒..." oninput="debounceSave()">${esc(d.note)}</textarea>
+    </div>
+    ${p.days.length>1?`<button class="btn-danger" style="margin-top:1rem;border:1px solid #f5c1c1;padding:6px 14px;font-size:12px;border-radius:8px" onclick="removeDay('${p.id}',${p.currentDay})">🗑 删除第${p.currentDay+1}天</button>`:''}
+  </div>`;
+}
+
+window.onSpotNameChange = function(i){
+  const val = document.getElementById('sn_'+i)?.value||'';
+  const disp = document.getElementById('sndisplay_'+i);
+  if(disp) disp.textContent = val||'景点 '+(i+1);
+  debounceSave();
+};
+
+window.switchDay = function(pid,i){
+  collectCurrentPlan(); plans[pid].currentDay=i; renderMainContent();
+};
+window.addDay = function(pid){
+  collectCurrentPlan();
+  const p=plans[pid];
+  p.days.push(createDayData(p.days.length+1));
+  p.currentDay=p.days.length-1;
+  debounceSave(); renderMainContent();
+};
+window.removeDay = function(pid,i){
+  if(!confirm('确定删除第'+(i+1)+'天？')) return;
+  collectCurrentPlan();
+  const p=plans[pid];
+  p.days.splice(i,1);
+  p.currentDay=Math.min(p.currentDay,p.days.length-1);
+  debounceSave(); renderMainContent();
+};
+window.addSpot = function(pid){
+  collectCurrentPlan();
+  plans[pid].days[plans[pid].currentDay].spots.push(createSpotData());
+  debounceSave(); renderMainContent();
+};
+window.removeSpot = function(pid,i){
+  collectCurrentPlan();
+  const d=plans[pid].days[plans[pid].currentDay];
+  if(d.spots.length<=1){toast('至少保留一个景点');return;}
+  d.spots.splice(i,1); debounceSave(); renderMainContent();
+};
+
+// ============ IMAGE HANDLING ============
+window.handleImgUpload = function(pid, spotIdx, event){
+  const files = event.target.files; if(!files.length) return;
+  const spot = plans[pid].days[plans[pid].currentDay].spots[spotIdx];
+  Array.from(files).forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      spot.images.push(e.target.result);
+      renderImgGrid(spotIdx, spot.images);
+      debounceSave();
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
+function renderImgGrid(spotIdx, images){
+  const grid=document.getElementById('imgGrid_'+spotIdx);
+  if(!grid) return;
+  grid.innerHTML=(images||[]).map((src,ii)=>`
+    <div class="img-thumb">
+      <img src="${src}" alt=""/>
+      <button class="del-img" onclick="removeImg(${spotIdx},${ii})">×</button>
+    </div>`).join('');
+}
+
+window.removeImg = function(spotIdx, imgIdx){
+  collectCurrentPlan();
+  const p=plans[currentPlanId];
+  p.days[p.currentDay].spots[spotIdx].images.splice(imgIdx,1);
+  debounceSave(); renderMainContent();
+};
+
+function bindImgGrids(p){
+  const d=p.days[p.currentDay];
+  if(d) d.spots.forEach((s,i)=>renderImgGrid(i,s.images));
+}
+
+// ============ PREVIEW ============
+function renderPreview(p){
+  const checkHtml = (p.checklist||[]).filter(c=>c.text).map(c=>`
+    <div style="display:flex;align-items:center;gap:8px;font-size:13px;padding:4px 0">
+      <span>${c.checked?'✅':'⬜'}</span>
+      <span style="${c.checked?'text-decoration:line-through;color:var(--muted)':''}">${esc(c.text)}</span>
+    </div>`).join('');
+
+  const flightsHtml = (p.flights||[]).filter(f=>f.number||f.airline).map(f=>`
+    <div style="background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13px">
+      <strong>${f.person?esc(f.person)+' · ':''}</strong>${esc(f.airline)} ${esc(f.number)}
+      <span style="color:var(--muted);margin-left:8px">${esc(f.dep)} ${esc(f.depTime)} → ${esc(f.arr)} ${esc(f.arrTime)}</span>
+    </div>`).join('');
+
+  const hotelsHtml = (p.hotels||[]).filter(h=>h.name).map(h=>`
+    <div style="background:var(--pink-light);border:1px solid var(--pink-mid);border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:13px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+      <div>
+        <div style="font-weight:500">🏨 ${esc(h.name)}</div>
+        <div style="color:var(--muted);font-size:12px">${esc(h.address)}</div>
+        <div style="font-size:12px;color:var(--blue-dark)">入住 ${esc(h.checkin)} · 退房 ${esc(h.checkout)}</div>
+      </div>
+      <a class="map-link ml-blue" style="font-size:11px" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((h.name||'')+(h.address?' '+h.address:''))}" target="_blank">📍 位置</a>
+    </div>`).join('');
+
+  const daysHtml = p.days.map((d,di)=>{
+    const hotelInfo = (d.hotelRef!==''&&d.hotelRef!==undefined&&p.hotels[d.hotelRef])?p.hotels[d.hotelRef]:null;
+    const city=p.title||'';
+    const spotsHtml = d.spots.filter(s=>s.name).map((s,si,arr)=>{
+      const next=arr[si+1];
+      const q=encodeURIComponent(s.name+' '+(s.address||'')+' '+city);
+      const nextQ=next?encodeURIComponent(next.name+' '+(next.address||'')+' '+city):'';
+      return `
+        ${si>0&&s.transport?`<div class="p-transport">↓ ${esc(s.transport)}${s.transportTime?' · '+esc(s.transportTime):''}</div>`:si>0?`<div style="text-align:center;color:var(--muted);padding:4px">↓</div>`:''}
+        <div class="p-spot">
+          <div class="p-snum">${si+1}</div>
+          <div style="flex:1">
+            <div style="font-weight:500;font-size:14px">${esc(s.name)}</div>
+            ${s.address?`<div style="font-size:12px;color:var(--muted)">${esc(s.address)}</div>`:''}
+            ${s.time?`<div style="font-size:12px;color:var(--pink)">⏰ ${esc(s.time)}</div>`:''}
+            ${s.note?`<div style="font-size:12px;color:var(--muted)">💡 ${esc(s.note)}</div>`:''}
+            ${s.content?`<div style="font-size:13px;margin-top:6px;line-height:1.6;background:var(--blue-light);border-radius:6px;padding:8px;color:var(--text)">${esc(s.content)}</div>`:''}
+            ${s.images&&s.images.length?`<div class="img-preview-grid" style="margin-top:8px">${s.images.map(src=>`<div class="img-thumb"><img src="${src}"/></div>`).join('')}</div>`:''}
+            <div class="map-actions" style="margin-top:6px">
+              <a class="map-link ml-blue" style="font-size:11px;padding:4px 10px" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank">📍 地图</a>
+              ${next&&nextQ?`<a class="map-link ml-gray" style="font-size:11px;padding:4px 10px" href="https://www.google.com/maps/dir/?api=1&origin=${q}&destination=${nextQ}&travelmode=transit" target="_blank">🧭 → 下一站</a>`:''}
+              ${s.website?`<a class="map-link ml-pink" style="font-size:11px;padding:4px 10px" href="${esc(s.website)}" target="_blank">🌐 官网</a>`:''}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const mealItem=(icon,m)=>{
+      if(!m||!m.name) return '';
+      const q=encodeURIComponent(m.name+' '+(m.addr||'')+' '+city);
+      return `<div class="p-meal">
+        <div class="p-meal-lbl">${icon}</div>
+        <div style="font-weight:500">${esc(m.name)}</div>
+        ${m.addr?`<div style="font-size:11px;color:var(--muted)">${esc(m.addr)}</div>`:''}
+        <a class="map-link ml-blue" style="font-size:11px;padding:3px 8px;margin-top:5px;display:inline-flex" href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank">📍 地图</a>
+      </div>`;
+    };
+
+    return `<div class="preview-day-card">
+      <div class="preview-day-hd">
+        <span style="background:rgba(255,255,255,.2);border-radius:6px;padding:3px 12px;font-size:13px">Day ${di+1}</span>
+        <span style="font-size:1rem;font-weight:500">${esc(d.theme)||'第'+(di+1)+'天'}</span>
+        ${d.weatherIcon||d.weatherDesc?`<span style="margin-left:auto;font-size:13px;opacity:.85">${d.weatherIcon||''} ${esc(d.weatherDesc)} ${esc(d.weatherTemp)}</span>`:''}
+      </div>
+      <div class="preview-day-body">
+        ${hotelInfo?`<div style="display:flex;align-items:flex-start;gap:8px;background:var(--pink-light);border:1px solid var(--pink-mid);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:13px">
+          <span>🏨</span><div>
+            <div style="font-weight:500">${esc(hotelInfo.name)}</div>
+            <div style="color:var(--muted);font-size:12px">${esc(hotelInfo.address)}</div>
+          </div>
+          <a class="map-link ml-blue" style="margin-left:auto;font-size:11px;padding:3px 8px" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(hotelInfo.name+' '+hotelInfo.address)}" target="_blank">📍</a>
+        </div>`:''}
+        ${spotsHtml}
+        <div class="p-meals">${mealItem('🌅 早餐',d.breakfast)}${mealItem('☀️ 午餐',d.lunch)}${mealItem('🌙 晚餐',d.dinner)}</div>
+        ${d.note?`<div class="p-note">💡 ${esc(d.note)}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div class="preview-trip-header">
+    <div style="font-family:'Noto Serif SC',serif;font-size:1.5rem;margin-bottom:.4rem">${esc(p.title||p.name)}</div>
+    <div style="font-size:.85rem;opacity:.82;display:flex;gap:1rem;flex-wrap:wrap">
+      ${p.date?`<span>📅 ${esc(p.date)}</span>`:''}
+      <span>👥 ${esc(p.people)}</span><span>📆 共${p.days.length}天</span>
+    </div>
+  </div>
+  ${checkHtml?`<div class="checklist-preview"><div style="font-size:13px;font-weight:500;color:var(--pink-dark);margin-bottom:8px">✅ 行前准备</div>${checkHtml}</div>`:''}
+  ${flightsHtml?`<div style="margin-bottom:12px"><div style="font-size:13px;font-weight:500;color:var(--blue-dark);margin-bottom:8px">✈ 航班信息</div>${flightsHtml}</div>`:''}
+  ${hotelsHtml?`<div style="margin-bottom:16px"><div style="font-size:13px;font-weight:500;color:var(--pink-dark);margin-bottom:8px">🏨 住宿信息</div>${hotelsHtml}</div>`:''}
+  ${daysHtml}
+  <div style="text-align:center;padding:1.5rem 0">
+    <button class="btn-pink" onclick="window.print()">🖨 打印 / 保存 PDF</button>
+  </div>`;
+}
+
+// ============ UTILS ============
+function esc(s){
+  if(s==null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ============ INIT ============
+loadAllPlans();
+</script>
+</body>
+</html>
