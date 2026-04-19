@@ -23,15 +23,6 @@ h1,h2,.serif{font-family:'Noto Serif SC',serif}
 .hero-sub{color:rgba(255,255,255,.82);font-size:1.05rem;margin-top:.5rem;font-family:'Zen Maru Gothic',sans-serif;position:relative;letter-spacing:.08em}
 .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:5px 14px;font-size:12px;color:rgba(255,255,255,.85);margin-top:1rem;position:relative}
 
-/* CONFIG BANNER */
-.config-banner{background:#fff3cd;border-bottom:2px solid #ffc107;padding:1rem 1.5rem;display:flex;align-items:flex-start;gap:12px}
-.config-banner.hidden{display:none}
-.config-icon{font-size:24px;flex-shrink:0}
-.config-text{flex:1;font-size:13px;line-height:1.7;color:#856404}
-.config-text strong{color:#533f03}
-.config-text code{background:#fff;border:1px solid #e0c050;border-radius:4px;padding:1px 6px;font-size:12px;font-family:monospace}
-.config-toggle{background:#ffc107;color:#533f03;border:none;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;font-weight:500;margin-top:8px;display:inline-block}
-
 /* PLANS BAR */
 .plans-bar{background:#fff;border-bottom:1px solid var(--border);padding:.8rem 1rem;display:flex;gap:8px;align-items:center;overflow-x:auto;flex-wrap:nowrap}
 .plan-chip{padding:6px 14px;border-radius:99px;border:1.5px solid var(--border);font-size:13px;cursor:pointer;white-space:nowrap;background:#fafaf8;color:var(--muted);transition:all .2s;font-family:'DM Sans',sans-serif;flex-shrink:0;display:inline-flex;align-items:center;gap:4px}
@@ -188,19 +179,6 @@ textarea{resize:vertical;min-height:70px;line-height:1.6}
   <div class="hero-badge">☁ 云端同步 · 实时共编 · 一键导航</div>
 </div>
 
-<!-- FIREBASE CONFIG BANNER -->
-<div class="config-banner" id="configBanner">
-  <div class="config-icon">⚙️</div>
-  <div style="flex:1">
-    <div class="config-text">
-      <strong>第一步：填入你的 Firebase 配置</strong><br>
-      请将下方 JS 中 <code>FIREBASE_CONFIG</code> 替换为你的项目配置，然后重新保存文件。<br>
-      <span style="color:#6d5200">👉 还没有 Firebase 项目？请查看同目录下的 <strong>部署教程.txt</strong> 文件，5分钟即可完成配置。</span>
-    </div>
-    <button class="config-toggle" onclick="document.getElementById('configBanner').classList.add('hidden')">我已配置，关闭提示</button>
-  </div>
-</div>
-
 <!-- PLANS BAR -->
 <div class="plans-bar" id="plansBar">
   <span style="font-size:13px;color:var(--muted)">加载攻略中...</span>
@@ -223,13 +201,12 @@ textarea{resize:vertical;min-height:70px;line-height:1.6}
 //  替换下面 firebaseConfig 中的所有字段
 // =====================================================
 const firebaseConfig = {
-  apiKey: "AIzaSyCTxJedmgs9b95q0RaXtfxoA10XaxTUVDs",
-  authDomain: "traveldata-8356f.firebaseapp.com",
-  projectId: "traveldata-8356f",
-  storageBucket: "traveldata-8356f.firebasestorage.app",
-  messagingSenderId: "21818383572",
-  appId: "1:21818383572:web:b1109337c25cf3a482af41",
-  measurementId: "G-951SQNS3S2"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 // =====================================================
 
@@ -283,26 +260,40 @@ function setSaveStatus(state, msg){
 
 // ============ FIREBASE OPERATIONS ============
 async function loadAllPlans(){
-  if(!isConfigured){ loadLocalFallback(); return; }
-  showLoading('加载攻略...');
-  try{
-    const snap = await getDocs(collection(db,'plans'));
-    plans = {};
-    snap.forEach(d=>{ plans[d.id] = {...d.data(), id:d.id}; });
+  if(!isConfigured){
+    showErrorBanner('config', '尚未填写 Firebase 配置', '请用文本编辑器打开 HTML 文件，将 firebaseConfig 中的占位符替换为你的真实配置，保存后重新上传到 GitHub。');
+    loadLocalFallback();
+    return;
+  }
+  showLoading('连接 Firebase...');
 
-    // check URL for shared plan
-    const params = new URLSearchParams(location.search);
-    const sharedId = params.get('id');
+  // 先尝试按 URL 参数加载共享攻略（不需要列出所有文档，权限要求更低）
+  const params = new URLSearchParams(location.search);
+  const sharedId = params.get('id');
+
+  try{
     if(sharedId){
-      if(!plans[sharedId]){
-        const sd = await getDoc(doc(db,'plans',sharedId));
-        if(sd.exists()) plans[sharedId] = {...sd.data(), id:sharedId};
+      // 共享链接模式：只加载这一个文档
+      showLoading('加载共享攻略...');
+      const sd = await getDoc(doc(db,'plans',sharedId));
+      if(sd.exists()){
+        plans[sharedId] = {...sd.data(), id:sharedId};
+        currentPlanId = sharedId;
+      } else {
+        showErrorBanner('notfound', '找不到该攻略', '该共享链接对应的攻略不存在，可能已被删除。请联系分享者重新生成链接。');
+        hideLoading(); return;
       }
-      currentPlanId = sharedId;
-    } else if(Object.keys(plans).length > 0){
-      currentPlanId = currentPlanId && plans[currentPlanId] ? currentPlanId : Object.keys(plans)[0];
     } else {
-      await createNewPlan('我的第一个攻略');
+      // 普通模式：加载全部攻略
+      showLoading('加载全部攻略...');
+      const snap = await getDocs(collection(db,'plans'));
+      plans = {};
+      snap.forEach(d=>{ plans[d.id] = {...d.data(), id:d.id}; });
+      if(Object.keys(plans).length > 0){
+        currentPlanId = Object.keys(plans)[0];
+      } else {
+        await createNewPlan('我的第一个攻略');
+      }
     }
     hideLoading();
     renderAll();
@@ -313,9 +304,79 @@ async function loadAllPlans(){
   }catch(e){
     hideLoading();
     setSaveStatus('error','连接失败');
-    toast('Firebase 连接失败，请检查配置: '+e.message, 5000);
-    loadLocalFallback();
+    console.error('Firebase error:', e);
+
+    // 给出具体的错误原因和解决方案
+    let title = 'Firebase 连接失败';
+    let detail = '';
+    const code = e.code || '';
+    const msg = e.message || '';
+
+    if(code === 'permission-denied' || msg.includes('permission') || msg.includes('Permission')){
+      title = '❌ 权限被拒绝（最常见问题）';
+      detail = `Firestore 安全规则拒绝了读写请求。
+
+请按以下步骤修复：
+1. 打开 https://console.firebase.google.com
+2. 进入你的项目 → Firestore Database → 规则
+3. 将规则内容改为：
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /plans/{planId} {
+      allow read, write: if true;
+    }
   }
+}
+
+4. 点击「发布」，等待1分钟后刷新页面`;
+    } else if(code === 'unavailable' || msg.includes('network') || msg.includes('offline')){
+      title = '🌐 网络连接失败';
+      detail = '无法连接到 Firebase 服务器，请检查网络连接后重试。';
+    } else if(msg.includes('projectId') || msg.includes('api-key') || msg.includes('API key')){
+      title = '🔑 Firebase 配置信息有误';
+      detail = '请检查 HTML 文件中的 firebaseConfig，确认 apiKey、projectId 等字段是否正确填写（不含多余的空格或引号）。';
+    } else if(msg.includes('app/duplicate-app')){
+      title = '⚠️ 应用重复初始化';
+      detail = '请刷新页面重试。';
+    } else {
+      title = '连接失败：' + (code || '未知错误');
+      detail = '错误信息：' + msg + '
+
+请打开浏览器控制台（F12 → Console）查看完整错误日志。';
+    }
+
+    showErrorBanner('firebase', title, detail);
+    // 仍然降级到本地模式，让页面可以使用
+    if(!sharedId) loadLocalFallback();
+  }
+}
+
+function showErrorBanner(type, title, detail){
+  // Remove existing error banner
+  const existing = document.getElementById('errorBanner');
+  if(existing) existing.remove();
+
+  const div = document.createElement('div');
+  div.id = 'errorBanner';
+  div.style.cssText = 'background:#fff0f0;border-bottom:2px solid #e74c3c;padding:1rem 1.5rem;font-size:13px;color:#7b1a1a;line-height:1.7';
+  div.innerHTML = \`
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <span style="font-size:22px;flex-shrink:0">⚠️</span>
+      <div style="flex:1">
+        <div style="font-weight:600;font-size:14px;margin-bottom:6px">\${title}</div>
+        <pre style="white-space:pre-wrap;font-family:inherit;font-size:13px;background:#ffe8e8;border-radius:6px;padding:10px;margin:0">\${detail}</pre>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <button onclick="location.reload()" style="background:#e74c3c;color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer">🔄 刷新重试</button>
+          <button onclick="document.getElementById('errorBanner').remove()" style="background:transparent;color:#7b1a1a;border:1px solid #e74c3c;border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer">关闭</button>
+        </div>
+      </div>
+    </div>
+  \`;
+  // Insert after save-bar
+  const saveBar = document.querySelector('.save-bar');
+  saveBar ? saveBar.after(div) : document.body.prepend(div);
 }
 
 async function savePlanToFirebase(planId, data){
