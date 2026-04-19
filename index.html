@@ -195,10 +195,11 @@ textarea{resize:vertical;min-height:70px;line-height:1.6}
 <div class="main-content" id="mainContent"></div>
 
 <!-- ============ FIREBASE SDK ============ -->
-<script type="module">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
 // =====================================================
-//  ⚠️  在此处填入你的 Firebase 配置  ⚠️
-//  替换下面 firebaseConfig 中的所有字段
+//  在此处填入你的 Firebase 配置
 // =====================================================
 const firebaseConfig = {
   apiKey: "AIzaSyCTxJedmgs9b95q0RaXtfxoA10XaxTUVDs",
@@ -206,22 +207,17 @@ const firebaseConfig = {
   projectId: "traveldata-8356f",
   storageBucket: "traveldata-8356f.firebasestorage.app",
   messagingSenderId: "21818383572",
-  appId: "1:21818383572:web:b1109337c25cf3a482af41",
-  measurementId: "G-951SQNS3S2"
+  appId: "1:21818383572:web:b1109337c25cf3a482af41"
 };
 // =====================================================
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, getDocs, setDoc, deleteDoc, onSnapshot, serverTimestamp }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ---- detect unconfigured ----
 const isConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
 
 let app, db;
 if(isConfigured){
-  app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
+  app = firebase.initializeApp(firebaseConfig);
+  db = firebase.firestore();
 }
 
 // ============ STATE ============
@@ -276,7 +272,7 @@ async function loadAllPlans(){
     if(sharedId){
       // 共享链接模式：只加载这一个文档
       showLoading('加载共享攻略...');
-      const sd = await getDoc(doc(db,'plans',sharedId));
+      const sd = await db.collection('plans').doc(sharedId).get();
       if(sd.exists()){
         plans[sharedId] = {...sd.data(), id:sharedId};
         currentPlanId = sharedId;
@@ -287,7 +283,7 @@ async function loadAllPlans(){
     } else {
       // 普通模式：加载全部攻略
       showLoading('加载全部攻略...');
-      const snap = await getDocs(collection(db,'plans'));
+      const snap = await db.collection('plans').get();
       plans = {};
       snap.forEach(d=>{ plans[d.id] = {...d.data(), id:d.id}; });
       if(Object.keys(plans).length > 0){
@@ -384,8 +380,8 @@ async function savePlanToFirebase(planId, data){
   try{
     const toSave = {...data};
     delete toSave.id;
-    toSave.updatedAt = serverTimestamp();
-    await setDoc(doc(db,'plans',planId), toSave);
+    toSave.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+    await db.collection('plans').doc(planId).set(toSave);
     setSaveStatus('saved','已保存 '+new Date().toLocaleTimeString('zh',{hour:'2-digit',minute:'2-digit'}));
   }catch(e){
     setSaveStatus('error','保存失败');
@@ -396,14 +392,14 @@ async function savePlanToFirebase(planId, data){
 async function deletePlanFromFirebase(planId){
   if(!isConfigured){ delete plans[planId]; saveLocal(); return; }
   try{
-    await deleteDoc(doc(db,'plans',planId));
+    await db.collection('plans').doc(planId).delete();
   }catch(e){ toast('删除失败: '+e.message); }
 }
 
 function subscribeToCurrentPlan(){
   if(!isConfigured || !currentPlanId) return;
   if(unsubscribe) unsubscribe();
-  unsubscribe = onSnapshot(doc(db,'plans',currentPlanId), snap=>{
+  unsubscribe = db.collection('plans').doc(currentPlanId).onSnapshot(snap=>{
     if(snap.exists()){
       const remote = {...snap.data(), id:currentPlanId};
       // only update if not currently editing (debounce active = user is typing)
