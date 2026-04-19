@@ -342,9 +342,7 @@ service cloud.firestore {
       detail = '请刷新页面重试。';
     } else {
       title = '连接失败：' + (code || '未知错误');
-      detail = '错误信息：' + msg + '
-
-请打开浏览器控制台（F12 → Console）查看完整错误日志。';
+      detail = '错误信息：' + msg + '\n\n请打开浏览器控制台（F12 → Console）查看完整错误日志。';
     }
 
     showErrorBanner('firebase', title, detail);
@@ -361,7 +359,7 @@ function showErrorBanner(type, title, detail){
   const div = document.createElement('div');
   div.id = 'errorBanner';
   div.style.cssText = 'background:#fff0f0;border-bottom:2px solid #e74c3c;padding:1rem 1.5rem;font-size:13px;color:#7b1a1a;line-height:1.7';
-  div.innerHTML = \`
+  div.innerHTML = `
     <div style="display:flex;align-items:flex-start;gap:12px">
       <span style="font-size:22px;flex-shrink:0">⚠️</span>
       <div style="flex:1">
@@ -373,7 +371,7 @@ function showErrorBanner(type, title, detail){
         </div>
       </div>
     </div>
-  \`;
+  `;
   // Insert after save-bar
   const saveBar = document.querySelector('.save-bar');
   saveBar ? saveBar.after(div) : document.body.prepend(div);
