@@ -1083,20 +1083,34 @@ const COLORS = [
 ];
 
 function richEditor(id, html, placeholder){
-  const colorDots = COLORS.map(c=>
-    '<span class="color-dot" title="'+c.label+'" style="background:'+c.hex+'" onclick="applyColor(''+id+'',''+c.hex+'')"></span>'
-  ).join('');
-  return '<div class="rich-editor-wrap">'
-    + '<div class="rich-toolbar">'
-    + '<button class="rtb rtb-bold" title="粗体" onmousedown="event.preventDefault();applyFmt('bold')"><b>B</b></button>'
-    + '<button class="rtb rtb-italic" title="斜体" onmousedown="event.preventDefault();applyFmt('italic')"><i>I</i></button>'
-    + '<div class="rtb-sep"></div>'
-    + colorDots
-    + '<div class="rtb-sep"></div>'
-    + '<button class="rtb" title="清除格式" onmousedown="event.preventDefault();applyFmt('removeFormat')" style="font-size:11px">✕ 格式</button>'
-    + '</div>'
-    + '<div class="rich-content" id="' + id + '" contenteditable="true" data-placeholder="' + placeholder + '" oninput="debounceSave()" onkeydown="richKeydown(event)">' + (html||'') + '</div>'
-    + '</div>';
+  const colorDots = COLORS.map(c=>[
+    '<span class="color-dot"',
+    'title="'+c.label+'"',
+    'style="background:'+c.hex+';width:16px;height:16px;border-radius:50%;border:2px solid transparent;cursor:pointer;display:inline-block;"',
+    'onmousedown="event.preventDefault();applyColor(\''+id+'\',\''+c.hex+'\')"',
+    '></span>'
+  ].join(' ')).join('');
+  const toolbar = [
+    '<button class="rtb rtb-bold" onmousedown="event.preventDefault();applyFmt(\'bold\')"><b>B</b></button>',
+    '<button class="rtb rtb-italic" onmousedown="event.preventDefault();applyFmt(\'italic\')"><i>I</i></button>',
+    '<div class="rtb-sep"></div>',
+    colorDots,
+    '<div class="rtb-sep"></div>',
+    '<button class="rtb" onmousedown="event.preventDefault();applyFmt(\'removeFormat\')" style="font-size:11px">✕ 格式</button>',
+  ].join('');
+  return [
+    '<div class="rich-editor-wrap">',
+    '<div class="rich-toolbar">'+toolbar+'</div>',
+    '<div class="rich-content"',
+    'id="'+id+'"',
+    'contenteditable="true"',
+    'data-placeholder="'+placeholder+'"',
+    'oninput="debounceSave()"',
+    'onkeydown="richKeydown(event)"',
+    '>',
+    (html||''),
+    '</div></div>'
+  ].join(' ');
 }
 
 function applyFmt(cmd){
