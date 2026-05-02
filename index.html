@@ -54,6 +54,22 @@ label{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacin
 input[type=text],input[type=url],select,textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:14px;font-family:'DM Sans',sans-serif;background:#fafaf8;color:var(--text);transition:border-color .2s}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue)}
 textarea{resize:vertical;min-height:70px;line-height:1.6}
+
+/* RICH EDITOR */
+.rich-editor-wrap{border:1.5px solid var(--border);border-radius:8px;background:#fafaf8;transition:border-color .2s;overflow:hidden}
+.rich-editor-wrap:focus-within{border-color:var(--blue)}
+.rich-toolbar{display:flex;align-items:center;gap:2px;padding:6px 8px;border-bottom:1px solid var(--border);background:#f4f0f8;flex-wrap:wrap}
+.rtb{background:transparent;border:none;border-radius:5px;padding:4px 7px;font-size:13px;cursor:pointer;color:var(--text);font-family:'DM Sans',sans-serif;transition:background .15s;line-height:1}
+.rtb:hover{background:var(--blue-light)}
+.rtb.active{background:var(--blue);color:#fff}
+.rtb-bold{font-weight:700}
+.rtb-italic{font-style:italic}
+.rtb-sep{width:1px;height:18px;background:var(--border);margin:0 4px;flex-shrink:0}
+.color-dot{width:16px;height:16px;border-radius:50%;border:2px solid transparent;cursor:pointer;display:inline-block;transition:transform .15s;flex-shrink:0}
+.color-dot:hover{transform:scale(1.2)}
+.color-dot.selected{border-color:var(--text)}
+.rich-content{min-height:80px;padding:9px 12px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);line-height:1.6;outline:none;white-space:pre-wrap;word-break:break-word}
+.rich-content:empty::before{content:attr(data-placeholder);color:var(--muted);pointer-events:none}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
@@ -541,11 +557,11 @@ function collectCurrentPlan(){
   d.breakfast={name:g('bfName'),addr:g('bfAddr')};
   d.lunch={name:g('luName'),addr:g('luAddr')};
   d.dinner={name:g('diName'),addr:g('diAddr')};
-  d.note=g('dNote');
+  d.note=gRich('dNote');
 
   d.spots.forEach((s,i)=>{
     s.name=g('sn_'+i); s.address=g('sa_'+i); s.time=g('st_'+i);
-    s.website=g('sw_'+i); s.content=g('sc_'+i); s.note=g('sno_'+i);
+    s.website=g('sw_'+i); s.content=gRich('sc_'+i); s.note=g('sno_'+i);
     if(i>0){ s.transport=g('tr_'+i); s.transportTime=g('trt_'+i); }
   });
 }
@@ -810,7 +826,7 @@ function renderDayEditor(p){
       </div>
       <div class="fg" style="margin-bottom:10px">
         <label>游玩详细内容</label>
-        <textarea id="sc_${i}" placeholder="记录玩法、路线、体验心得..." oninput="debounceSave()">${esc(s.content)}</textarea>
+        ${richEditor('sc_'+i, s.content||'', '记录玩法、路线、体验心得...')}
       </div>
       <div class="map-actions" style="margin-bottom:10px">
         ${s.name
@@ -875,7 +891,7 @@ function renderDayEditor(p){
     ${mealHtml('di','🌙','晚餐',d.dinner||{name:'',addr:''})}
     <div class="fg" style="margin-top:1rem">
       <label>今日备注 / 小贴士</label>
-      <textarea id="dNote" placeholder="交通、注意事项、预约提醒..." oninput="debounceSave()">${esc(d.note)}</textarea>
+      ${richEditor('dNote', d.note||'', '交通、注意事项、预约提醒...')}
     </div>
     ${p.days.length>1?`<button class="btn-danger" style="margin-top:1rem;border:1px solid #f5c1c1;padding:6px 14px;font-size:12px;border-radius:8px" onclick="removeDay('${p.id}',${p.currentDay})">🗑 删除第${p.currentDay+1}天</button>`:''}
   </div>`;
@@ -1052,6 +1068,57 @@ function renderPreview(p){
   <div style="text-align:center;padding:1.5rem 0">
     <button class="btn-pink" onclick="window.print()">🖨 打印 / 保存 PDF</button>
   </div>`;
+}
+
+// ============ RICH EDITOR ============
+const COLORS = [
+  {hex:'#2a2040',label:'默认'},
+  {hex:'#3a7bd5',label:'蓝色'},
+  {hex:'#e8619a',label:'粉色'},
+  {hex:'#2d8a5a',label:'绿色'},
+  {hex:'#e67e22',label:'橙色'},
+  {hex:'#e74c3c',label:'红色'},
+  {hex:'#8e44ad',label:'紫色'},
+  {hex:'#888888',label:'灰色'},
+];
+
+function richEditor(id, html, placeholder){
+  const colorDots = COLORS.map(c=>
+    '<span class="color-dot" title="'+c.label+'" style="background:'+c.hex+'" onclick="applyColor(''+id+'',''+c.hex+'')"></span>'
+  ).join('');
+  return '<div class="rich-editor-wrap">'
+    + '<div class="rich-toolbar">'
+    + '<button class="rtb rtb-bold" title="粗体" onmousedown="event.preventDefault();applyFmt('bold')"><b>B</b></button>'
+    + '<button class="rtb rtb-italic" title="斜体" onmousedown="event.preventDefault();applyFmt('italic')"><i>I</i></button>'
+    + '<div class="rtb-sep"></div>'
+    + colorDots
+    + '<div class="rtb-sep"></div>'
+    + '<button class="rtb" title="清除格式" onmousedown="event.preventDefault();applyFmt('removeFormat')" style="font-size:11px">✕ 格式</button>'
+    + '</div>'
+    + '<div class="rich-content" id="' + id + '" contenteditable="true" data-placeholder="' + placeholder + '" oninput="debounceSave()" onkeydown="richKeydown(event)">' + (html||'') + '</div>'
+    + '</div>';
+}
+
+function applyFmt(cmd){
+  document.execCommand(cmd, false, null);
+  debounceSave();
+}
+
+function applyColor(id, color){
+  const el = document.getElementById(id);
+  if(el) el.focus();
+  document.execCommand('styleWithCSS', false, true);
+  document.execCommand('foreColor', false, color);
+  debounceSave();
+}
+
+function richKeydown(e){
+  if(e.key==='Tab'){e.preventDefault();document.execCommand('insertText',false,'    ');}
+}
+
+function gRich(id){
+  const el = document.getElementById(id);
+  return el ? el.innerHTML : '';
 }
 
 // ============ UTILS ============
